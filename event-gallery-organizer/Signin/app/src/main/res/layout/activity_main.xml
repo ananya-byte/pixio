@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:gravity="top">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+        <TextView
+            android:id="@+id/user_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email@email.com"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/logout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logout_toolbar"
+            android:background="@color/black"
+            android:layout_gravity="right"
+            android:paddingRight="26sp"
+            />
+    </androidx.appcompat.widget.Toolbar>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WELCOME TO PIXIO"
+            android:textSize="20sp"
+            android:textColor="#64656b"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:padding="10dp"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:background="@color/black"
+            android:layout_margin="20dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register for event"
+                android:padding="25dp"
+                android:textSize="30sp"
+                android:textColor="@color/white"/>
+            <Button
+                android:id="@+id/event_register_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expand All"
+                android:textColor="@color/white"
+                android:background="#00000000"
+                android:padding="20dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:background="@color/black"
+            android:layout_margin="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload Images"
+                android:padding="25dp"
+                android:textSize="30sp"
+                android:textColor="@color/white"/>
+            <Button
+                android:id="@+id/upload_images_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expand All"
+                android:textColor="@color/white"
+                android:background="#00000000"
+                android:padding="20dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:background="@color/black"
+            android:layout_margin="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Images"
+                android:padding="25dp"
+                android:textSize="30sp"
+                android:textColor="@color/white"/>
+            <Button
+                android:id="@+id/view_images_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expand All"
+                android:textColor="@color/white"
+                android:background="#00000000"
+                android:padding="20dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>
