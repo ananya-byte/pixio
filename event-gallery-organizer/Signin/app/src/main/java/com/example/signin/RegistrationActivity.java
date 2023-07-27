@@ -48,13 +48,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     //face detector
-    FaceDetectorOptions highAccuracyOpts =
-            new FaceDetectorOptions.Builder()
-                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_NONE)
-                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
-                    .build();
-    FaceDetector detector;
+
 
     //face recognizer
 
@@ -67,11 +61,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode()== RESULT_OK) {
                         Uri image_uri = result.getData().getData();
-                        Bitmap input = uriToBitmap(image_uri);
-                        input = rotateBitmap(input);
-                        imageView.setImageBitmap(input);
+                        imageView.setImageURI(image_uri);
                         registrationText.setText("Registered for event.");
-                        performFaceDetection(input);
                     }
                 }
             });
@@ -141,7 +132,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         //initializing face detector
-        detector = FaceDetection.getClient(highAccuracyOpts);
 
         //face recognizing initialising
 
@@ -171,7 +161,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         input = rotateBitmap(input);
                         imageView.setImageBitmap(input);
                         registrationText.setText("Registered for event.");
-                        performFaceDetection(input);
                     }
                 }
             });
@@ -204,55 +193,6 @@ public class RegistrationActivity extends AppCompatActivity {
         return cropped;
     }
 
-
-    //detection conversion from bitmap to input image
-    public void performFaceDetection(Bitmap bitmap){
-        Bitmap mutableBmp = bitmap.copy(Bitmap.Config.ARGB_8888,true);
-        InputImage image = InputImage.fromBitmap(bitmap,0);
-        Task<List<Face>> result =
-                detector.process(image)
-                        .addOnSuccessListener(
-                                new OnSuccessListener<List<Face>>() {
-                                    @Override
-                                    public void onSuccess(List<Face> faces) {
-                                        // Task completed successfully
-                                        // ...
-                                        for (Face face : faces) {
-                                            Rect bounds = face.getBoundingBox();
-                                            performFaceRecognition(bounds,bitmap);
-                                        }
-                                        imageView.setImageBitmap(mutableBmp);
-                                    }
-                                })
-                        .addOnFailureListener(
-                                new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Task failed with an exception
-                                        // ...
-                                    }
-                                });
-
-    }
-
-    // perform face recognition
-    public void performFaceRecognition(Rect bounds,Bitmap input){
-        if(bounds.top<0){
-            bounds.top = 0;
-        }
-        if(bounds.left<0){
-            bounds.left = 0;
-        }
-        if(bounds.right>input.getWidth()){
-            bounds.right = input.getWidth() - 1;
-        }
-        if(bounds.bottom>input.getHeight()){
-            bounds.bottom = input.getHeight() - 1;
-        }
-        Bitmap croppedFace = Bitmap.createBitmap(input,bounds.left,bounds.top,bounds.width(),bounds.height());
-        imageView.setImageBitmap(croppedFace);
-
-    }
 
     @Override
     protected void onDestroy() {

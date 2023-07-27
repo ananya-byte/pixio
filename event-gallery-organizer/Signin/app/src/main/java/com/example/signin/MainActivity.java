@@ -35,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+
+                startActivity(intent);
+            }
+        });
+        eventRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                intent.putExtra("user_email",str);
                 startActivity(intent);
             }
         });
