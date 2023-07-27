@@ -33,7 +33,6 @@ public class SignUpActivity extends AppCompatActivity {
         if(currentUser != null){
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
-            finish();
         }
     }
 
@@ -72,7 +71,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.makeText(SignUpActivity.this, "Account created.",
                                             Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    intent.putExtra("user_email", signupEmail.getText().toString().trim());
                                     startActivity(intent);
+
                                 }
                                 else {
                                     // If sign in fails, display a message to the user.
