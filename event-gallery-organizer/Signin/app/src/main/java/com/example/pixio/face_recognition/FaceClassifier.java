@@ -1,9 +1,7 @@
-package com.example.signin.face_recognition;
+package com.example.pixio.face_recognition;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
-
-import java.util.List;
 
 /** Generic interface for interacting with different recognition engines. */
 public interface FaceClassifier {

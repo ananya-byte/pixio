@@ -1,4 +1,4 @@
-package com.example.signin;
+package com.example.pixio;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -34,8 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.signin.face_recognition.FaceClassifier;
-import com.example.signin.face_recognition.TFLiteFaceRecognition;
+import com.example.pixio.face_recognition.FaceClassifier;
+import com.example.pixio.face_recognition.TFLiteFaceRecognition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

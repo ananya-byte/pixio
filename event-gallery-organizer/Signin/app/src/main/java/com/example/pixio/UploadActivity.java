@@ -1,4 +1,4 @@
-package com.example.signin;
+package com.example.pixio;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,14 +27,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.signin.face_recognition.FaceClassifier;
-import com.example.signin.face_recognition.TFLiteFaceRecognition;
+import com.example.pixio.face_recognition.FaceClassifier;
+import com.example.pixio.face_recognition.TFLiteFaceRecognition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +44,6 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 
 public class UploadActivity extends AppCompatActivity {
@@ -275,8 +271,12 @@ public class UploadActivity extends AppCompatActivity {
                 p1.setTextSize(30);
                 canvas.drawText(recognition.getTitle(),bound.left,bound.top,p1);
                 MainActivity.userimg.put(recognition.getTitle(),imageuri);
-                Log.d("CHECKSCAN",recognition.getTitle()+ "  " + MainActivity.userreg);
+                MainActivity.userreg = recognition.getTitle();
             }
+            else {
+                MainActivity.userreg = "You aren't present in the picture";
+            }
+
         }
     }
 

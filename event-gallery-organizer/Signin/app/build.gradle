@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.signin'
+    namespace 'com.example.pixio'
     compileSdk 33
 
     buildFeatures {
@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.signin"
+        applicationId "com.example.pixio"
         minSdk 24
         targetSdk 33
         versionCode 1

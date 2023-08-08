@@ -1,4 +1,4 @@
-package com.example.signin.face_recognition;
+package com.example.pixio.face_recognition;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.util.Pair;
 
-import com.example.signin.MainActivity;
+import com.example.pixio.MainActivity;
 
 import org.tensorflow.lite.Interpreter;
 

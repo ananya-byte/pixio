@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sign in</string>
+    <string name="app_name">PIXIO</string>
     <string name="expand_all" />
     <string name="register">REGISTER</string>
     <string name="enter_the_verification_code_of_the_event">Enter the verification code of the event.</string>
