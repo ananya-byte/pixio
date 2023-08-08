@@ -47,6 +47,7 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 public class UploadActivity extends AppCompatActivity {
@@ -77,7 +78,7 @@ public class UploadActivity extends AppCompatActivity {
                         Bitmap inputImage = uriToBitmap(image_uri);
                         Bitmap rotated = rotateBitmap(inputImage);
                         imageView.setImageBitmap(rotated);
-                        performFaceDetection(rotated);
+                        performFaceDetection(rotated,image_uri);
                     }
                 }
             });
@@ -179,7 +180,7 @@ public class UploadActivity extends AppCompatActivity {
                         Bitmap input = uriToBitmap(image_uri);
                         input = rotateBitmap(input);
                         imageView.setImageBitmap(input);
-                        performFaceDetection(input);
+                        performFaceDetection(input,image_uri);
                     }
                 }
             });
@@ -214,7 +215,7 @@ public class UploadActivity extends AppCompatActivity {
 
     //TODO perform facedetection
     Canvas canvas;
-    public void performFaceDetection(Bitmap input){
+    public void performFaceDetection(Bitmap input,Uri imageuri){
         Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888,true);
         canvas = new Canvas(mutableBmp);
         InputImage image = InputImage.fromBitmap(input, 0);
@@ -233,7 +234,7 @@ public class UploadActivity extends AppCompatActivity {
                                             p1.setColor(Color.RED);
                                             p1.setStyle(Paint.Style.STROKE);
                                             p1.setStrokeWidth(5);
-                                            performFaceRecognition(bounds,input);
+                                            performFaceRecognition(bounds,input,imageuri);
                                             canvas.drawRect(bounds,p1);
                                         }
                                         //imageView.setImageBitmap(mutableBmp);
@@ -249,7 +250,7 @@ public class UploadActivity extends AppCompatActivity {
                                 });
     }
     //TODO face recognition
-    public void performFaceRecognition(Rect bound,Bitmap input){
+    public void performFaceRecognition(Rect bound, Bitmap input, Uri imageuri){
         if(bound.top<0){
             bound.top = 0;
         }
@@ -263,7 +264,7 @@ public class UploadActivity extends AppCompatActivity {
             bound.bottom = input.getHeight() -1;
         }
         Bitmap croppedFace = Bitmap.createBitmap(input,bound.left,bound.top,bound.width(),bound.height());
-        imageView.setImageBitmap(croppedFace);
+        //imageView.setImageBitmap(croppedFace);
         croppedFace = Bitmap.createScaledBitmap(croppedFace,160,160,false);
         FaceClassifier.Recognition recognition = faceClassifier.recognizeImage(croppedFace,false);
         if(recognition!=null){
@@ -273,6 +274,8 @@ public class UploadActivity extends AppCompatActivity {
                 p1.setColor(Color.WHITE);
                 p1.setTextSize(30);
                 canvas.drawText(recognition.getTitle(),bound.left,bound.top,p1);
+                MainActivity.userimg.put(recognition.getTitle(),imageuri);
+                Log.d("CHECKSCAN",recognition.getTitle()+ "  " + MainActivity.userreg);
             }
         }
     }

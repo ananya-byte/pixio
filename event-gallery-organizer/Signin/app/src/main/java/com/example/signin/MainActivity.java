@@ -3,6 +3,7 @@ package com.example.signin;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,8 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     public static HashMap<String, FaceClassifier.Recognition> registered = new HashMap<>();
-
+    public static HashMap<String, Uri> userimg = new HashMap<>();
+    public static String userreg = new String();
     TextView userDetails ;
     Button eventRegister, uploadImages , viewImages;
     ImageButton logoutButton;
