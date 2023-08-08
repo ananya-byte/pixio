@@ -48,8 +48,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     //face detector
-
-
+// High-accuracy landmark detection and face classification
+    FaceDetectorOptions highAccuracyOpts =
+            new FaceDetectorOptions.Builder()
+                    .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                    .setLandmarkMode(FaceDetectorOptions.LANDMARK_MODE_ALL)
+                    .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
+                    .build();
+    FaceDetector detector;
+// Or use the default options:
+// FaceDetector detector = FaceDetection.getClient();
     //face recognizer
 
 
@@ -61,8 +69,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode()== RESULT_OK) {
                         Uri image_uri = result.getData().getData();
-                        imageView.setImageURI(image_uri);
+                        Bitmap inputImage = uriToBitmap(image_uri);
+                        Bitmap rotated = rotateBitmap(inputImage);
+                        imageView.setImageBitmap(rotated);
                         registrationText.setText("Registered for event.");
+                        performFaceDetection(rotated);
                     }
                 }
             });
@@ -132,7 +143,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         //initializing face detector
-
+        detector = FaceDetection.getClient(highAccuracyOpts);
         //face recognizing initialising
 
 
@@ -161,6 +172,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         input = rotateBitmap(input);
                         imageView.setImageBitmap(input);
                         registrationText.setText("Registered for event.");
+                        performFaceDetection(input);
                     }
                 }
             });
@@ -193,6 +205,41 @@ public class RegistrationActivity extends AppCompatActivity {
         return cropped;
     }
 
+//TODO perform facedetection
+    public void performFaceDetection(Bitmap input){
+        Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888,true);
+        Canvas canvas = new Canvas(mutableBmp);
+        InputImage image = InputImage.fromBitmap(input, 0);
+        Task<List<Face>> result =
+                detector.process(image)
+                        .addOnSuccessListener(
+                                new OnSuccessListener<List<Face>>() {
+                                    @Override
+                                    public void onSuccess(List<Face> faces) {
+                                        // Task completed successfully
+                                        // ...
+                                        Log.d("tryFace","Len = "+faces.size());
+                                        for (Face face : faces) {
+                                            Rect bounds = face.getBoundingBox();
+                                            Paint p1 = new Paint();
+                                            p1.setColor(Color.RED);
+                                            p1.setStyle(Paint.Style.STROKE);
+                                            p1.setStrokeWidth(5);
+                                            canvas.drawRect(bounds,p1);
+                                        }
+                                        imageView.setImageBitmap(mutableBmp);
+                                    }
+                                })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+                                    }
+                                });
+    }
+    //TODO face recognition
 
     @Override
     protected void onDestroy() {

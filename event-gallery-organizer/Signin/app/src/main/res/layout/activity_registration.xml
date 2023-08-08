@@ -63,7 +63,7 @@
             android:text="Upload"
             android:id="@+id/upload_reg_button"
             android:textSize="18sp"
-
+            android:textColor="@color/white"
             android:backgroundTint="@color/black"
             app:cornerRadius="10dp"/>
         <Button
@@ -71,6 +71,7 @@
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:text="Camera"
+            android:textColor="@color/white"
             android:id="@+id/camera_reg_button"
             android:textSize="18sp"
             android:backgroundTint="@color/black"
