@@ -9,10 +9,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.signin.face_recognition.FaceClassifier;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
+    public static HashMap<String, FaceClassifier.Recognition> registered = new HashMap<>();
+
     TextView userDetails ;
     Button eventRegister, uploadImages , viewImages;
     ImageButton logoutButton;
@@ -43,6 +48,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
+                intent.putExtra("user_email",str);
+                startActivity(intent);
+            }
+        });
+        uploadImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
                 intent.putExtra("user_email",str);
                 startActivity(intent);
             }

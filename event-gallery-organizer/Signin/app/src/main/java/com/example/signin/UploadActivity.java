@@ -49,7 +49,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.List;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class UploadActivity extends AppCompatActivity {
 
 
     //face detector
@@ -61,10 +61,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_NONE)
                     .build();
     FaceDetector detector;
-// Or use the default options:
+    // Or use the default options:
 // FaceDetector detector = FaceDetection.getClient();
     //face recognizer
-FaceClassifier faceClassifier;
+    FaceClassifier faceClassifier;
 
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -77,7 +77,6 @@ FaceClassifier faceClassifier;
                         Bitmap inputImage = uriToBitmap(image_uri);
                         Bitmap rotated = rotateBitmap(inputImage);
                         imageView.setImageBitmap(rotated);
-                        registrationText.setText("Registered for event.");
                         performFaceDetection(rotated);
                     }
                 }
@@ -90,7 +89,7 @@ FaceClassifier faceClassifier;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_upload);
 
         registrationText = findViewById(R.id.reg_text);
         imageView = findViewById(R.id.reg_profile);
@@ -180,7 +179,6 @@ FaceClassifier faceClassifier;
                         Bitmap input = uriToBitmap(image_uri);
                         input = rotateBitmap(input);
                         imageView.setImageBitmap(input);
-                        registrationText.setText("Registered for event.");
                         performFaceDetection(input);
                     }
                 }
@@ -214,10 +212,11 @@ FaceClassifier faceClassifier;
         return cropped;
     }
 
-//TODO perform facedetection
+    //TODO perform facedetection
+    Canvas canvas;
     public void performFaceDetection(Bitmap input){
         Bitmap mutableBmp = input.copy(Bitmap.Config.ARGB_8888,true);
-        Canvas canvas = new Canvas(mutableBmp);
+        canvas = new Canvas(mutableBmp);
         InputImage image = InputImage.fromBitmap(input, 0);
         Task<List<Face>> result =
                 detector.process(image)
@@ -266,33 +265,19 @@ FaceClassifier faceClassifier;
         Bitmap croppedFace = Bitmap.createBitmap(input,bound.left,bound.top,bound.width(),bound.height());
         imageView.setImageBitmap(croppedFace);
         croppedFace = Bitmap.createScaledBitmap(croppedFace,160,160,false);
-        FaceClassifier.Recognition recognition = faceClassifier.recognizeImage(croppedFace,true);
-        showRegisterDialogue(croppedFace,recognition);
+        FaceClassifier.Recognition recognition = faceClassifier.recognizeImage(croppedFace,false);
+        if(recognition!=null){
+            Log.d("tryFR",recognition.getTitle() + " " + recognition.getDistance());
+            if(recognition.getDistance()<1){
+                Paint p1 = new Paint();
+                p1.setColor(Color.WHITE);
+                p1.setTextSize(30);
+                canvas.drawText(recognition.getTitle(),bound.left,bound.top,p1);
+            }
+        }
     }
 
-    public void showRegisterDialogue(Bitmap face, FaceClassifier.Recognition recognition)
-    {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.register_face_dialogue);
-        ImageView imageView1 = dialog.findViewById(R.id.dlg_image);
-        EditText editText = dialog.findViewById(R.id.dlg_input);
-        Button register = dialog.findViewById(R.id.button2);
-        imageView1.setImageBitmap(face);
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(editText.getText().toString().equals("")){
-                    editText.setError("Enter Name");
-                }
-                else {
-                    faceClassifier.register(editText.getText().toString(),recognition);
-                    Toast.makeText(RegistrationActivity.this,"Registration Complete",Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
-            }
-        });
-        dialog.show();
-    }
+
 
     @Override
     protected void onDestroy() {
