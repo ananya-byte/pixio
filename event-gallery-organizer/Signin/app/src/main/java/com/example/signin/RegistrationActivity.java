@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,10 +28,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.signin.face_recognition.FaceClassifier;
+import com.example.signin.face_recognition.TFLiteFaceRecognition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -59,7 +64,7 @@ public class RegistrationActivity extends AppCompatActivity {
 // Or use the default options:
 // FaceDetector detector = FaceDetection.getClient();
     //face recognizer
-
+FaceClassifier faceClassifier;
 
     ActivityResultLauncher<Intent> galleryActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -145,7 +150,11 @@ public class RegistrationActivity extends AppCompatActivity {
         //initializing face detector
         detector = FaceDetection.getClient(highAccuracyOpts);
         //face recognizing initialising
-
+        try {
+            faceClassifier = TFLiteFaceRecognition.create(getAssets(),"facenet.tflite",160,false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     Uri image_uri;
@@ -225,9 +234,10 @@ public class RegistrationActivity extends AppCompatActivity {
                                             p1.setColor(Color.RED);
                                             p1.setStyle(Paint.Style.STROKE);
                                             p1.setStrokeWidth(5);
+                                            performFaceRecognition(bounds,input);
                                             canvas.drawRect(bounds,p1);
                                         }
-                                        imageView.setImageBitmap(mutableBmp);
+                                        //imageView.setImageBitmap(mutableBmp);
                                     }
                                 })
                         .addOnFailureListener(
@@ -240,6 +250,47 @@ public class RegistrationActivity extends AppCompatActivity {
                                 });
     }
     //TODO face recognition
+    public void performFaceRecognition(Rect bound,Bitmap input){
+        if(bound.top<0){
+            bound.top = 0;
+        }
+        if(bound.left<0){
+            bound.top = 0;
+        }
+        if(bound.right>input.getWidth()){
+            bound.right = input.getWidth() -1;
+        }
+        if(bound.bottom>input.getHeight()){
+            bound.bottom = input.getHeight() -1;
+        }
+        Bitmap croppedFace = Bitmap.createBitmap(input,bound.left,bound.top,bound.width(),bound.height());
+        imageView.setImageBitmap(croppedFace);
+        FaceClassifier.Recognition recognition = faceClassifier.recognizeImage(croppedFace,true);
+        showRegisterDialogue(croppedFace,recognition);
+    }
+
+    public void showRegisterDialogue(Bitmap face, FaceClassifier.Recognition recognition)
+    {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.register_face_dialogue);
+        ImageView imageView1 = dialog.findViewById(R.id.dlg_image);
+        EditText editText = dialog.findViewById(R.id.dlg_input);
+        Button register = dialog.findViewById(R.id.button2);
+        imageView1.setImageBitmap(face);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(editText.getText().toString().equals("")){
+                    editText.setError("Enter Name");
+                }
+                else {
+                    faceClassifier.register(editText.getText().toString(),recognition);
+                    Toast.makeText(RegistrationActivity.this,"Registration Complete",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.show();
+    }
 
     @Override
     protected void onDestroy() {
