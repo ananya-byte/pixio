@@ -265,6 +265,7 @@ FaceClassifier faceClassifier;
         }
         Bitmap croppedFace = Bitmap.createBitmap(input,bound.left,bound.top,bound.width(),bound.height());
         imageView.setImageBitmap(croppedFace);
+        croppedFace = Bitmap.createScaledBitmap(croppedFace,160,160,false);
         FaceClassifier.Recognition recognition = faceClassifier.recognizeImage(croppedFace,true);
         showRegisterDialogue(croppedFace,recognition);
     }
